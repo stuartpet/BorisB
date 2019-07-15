@@ -2,8 +2,12 @@
 
 require 'docking_station'
 
-describe Dockingstation do
+describe DockingStation do
   it { is_expected.to respond_to :release_bike }
+
+  it 'has a default capacity' do
+    expect(subject.capacity).to eq DockingStation::NUMBER_OF_BIKES
+  end
 
   describe '#release_bike' do
     it 'releases a working bike' do
@@ -27,8 +31,19 @@ describe Dockingstation do
 
     describe '#docking_bike' do
       it 'raises an error when there are no spaces available' do
-        20.times { subject.dock(Bike.new) }
-        expect { subject.dock(Bike.new) }.to raise_error 'No space available'
+        subject.capacity.times { subject.dock Bike.new }
+        expect { subject.dock Bike.new }.to raise_error 'No space available'
+      end
+    end
+
+    describe 'initialization' do
+      subject { DockingStation.new }
+      let(:bike) { Bike.new }
+      it 'defaults capacity' do
+        described_class::NUMBER_OF_BIKES.times do
+          subject.dock(bike)
+        end
+        expect { subject.dock(bike) }.to raise_error 'No space available'
       end
     end
   end
