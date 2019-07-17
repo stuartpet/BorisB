@@ -12,7 +12,11 @@ class DockingStation
   end
 
   def release_bike
-    raise 'No bikes available' if empty?
+    flag = false
+    raise 'No bikes available' unless empty?
+
+    bikes.each { |bike| flag = true if bike.working? }
+    raise 'bike is broken' unless flag
 
     bikes.pop
   end
@@ -21,7 +25,7 @@ class DockingStation
     raise 'No space available' if full?
 
     bikes << bike
-  end
+end
 
   private
 
@@ -29,9 +33,9 @@ class DockingStation
 
   def full?
     bikes.count >= capacity
-  end
+    end
 
   def empty?
-    bikes.empty?
-  end
+    !bikes.empty?
+    end
 end
